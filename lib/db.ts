@@ -154,7 +154,7 @@ export function defaultSurvey() {
     intro: 'Tell us about your organization and how you envision RELAY in your facility.',
     questions: [
       { id: 'q_org', type: 'short_text', label: 'Organization name', required: true },
-      { id: 'q_type', type: 'single_choice', label: 'Organization type', required: true,
+      { id: 'q_type', type: 'multi_choice', label: 'Organization type', required: true,
         choices: ['Hospital', 'Health system', 'Specialty clinic', 'Long-term care facility', 'Other'] },
       { id: 'q_name', type: 'short_text', label: 'Your name', required: true },
       { id: 'q_role', type: 'short_text', label: 'Your role / title', required: true },

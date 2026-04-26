@@ -63,22 +63,28 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
       </div>
 
       <div className={`wrap ${done ? 'fade-out' : ''}`}>
-        <h1>{schema.title || 'Clinical Pilot'}</h1>
+        <h1><TitleWithLogo title={schema.title || 'Clinical Pilot'} /></h1>
         {schema.intro && <p className="intro">{schema.intro}</p>}
 
         <div className="rule" />
 
         <div className="questions">
           {schema.questions.map((q, i) => (
-            <Field key={q.id} q={q} index={i} value={answers[q.id]} onChange={(v) => setVal(q.id, v)} />
+            <Field
+              key={q.id}
+              q={q}
+              index={i}
+              value={answers[q.id]}
+              otherValue={answers[`${q.id}_other`] || ''}
+              onChange={(v) => setVal(q.id, v)}
+              onOtherChange={(v) => setVal(`${q.id}_other`, v)}
+            />
           ))}
         </div>
 
         {error && <div className="err">{error}</div>}
 
         <SubmitButton onClick={submit} busy={submitting} />
-
-        <div className="meta footer">END · {schema.questions.length} FIELD{schema.questions.length === 1 ? '' : 'S'}</div>
       </div>
 
       {done && (
@@ -116,11 +122,11 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
         .bdot {
           width: 11px; height: 11px; border-radius: 50%;
           background:
-            radial-gradient(circle at 35% 28%, #6a8cff 0%, #2a4cb0 38%, #0a1838 78%, #050a1f 100%);
+            radial-gradient(circle at 35% 28%, #ff5a5a 0%, #dc2626 45%, #7f1d1d 100%);
           box-shadow:
             inset 0 1px 1px rgba(255,255,255,0.35),
             inset 0 -1px 1px rgba(0,0,0,0.5),
-            0 0 14px rgba(60, 100, 220, 0.45);
+            0 0 14px rgba(220, 38, 38, 0.45);
         }
         .back {
           text-decoration: none; color: #e8eef7;
@@ -235,6 +241,29 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
   );
 }
 
+/** Renders the form title, replacing a leading "RELAY" with the logo PNG. */
+function TitleWithLogo({ title }: { title: string }) {
+  const m = title.match(/^RELAY\s*(.*)$/i);
+  if (!m) return <>{title}</>;
+  const rest = m[1];
+  return (
+    <span className="tlw">
+      <img src="/relay-logo.png" alt="RELAY" />
+      {rest && <span className="tlw-rest">{rest}</span>}
+      <style jsx>{`
+        .tlw { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 0.35em; }
+        .tlw img {
+          height: 0.78em;
+          width: auto;
+          display: inline-block;
+          vertical-align: -0.06em;
+        }
+        .tlw-rest { display: inline; }
+      `}</style>
+    </span>
+  );
+}
+
 /** Submit button: black/white outline → white on hover → green on click. */
 function SubmitButton({ onClick, busy }: { onClick: () => void; busy: boolean }) {
   return (
@@ -274,7 +303,12 @@ function SubmitButton({ onClick, busy }: { onClick: () => void; busy: boolean })
   );
 }
 
-function Field({ q, index, value, onChange }: { q: Question; index: number; value: any; onChange: (v: any) => void }) {
+function Field({ q, index, value, otherValue, onChange, onOtherChange }: {
+  q: Question; index: number; value: any;
+  otherValue?: string;
+  onChange: (v: any) => void;
+  onOtherChange?: (v: string) => void;
+}) {
   const onFocus = () => track('form_focus', { id: q.id });
   if (q.type === 'section') {
     return (
@@ -311,7 +345,14 @@ function Field({ q, index, value, onChange }: { q: Question; index: number; valu
       </div>
       {q.help && <div className="qh">{q.help}</div>}
       <div className="input-wrap">
-        <Input q={q} value={value} onChange={onChange} onFocus={onFocus} />
+        <Input
+          q={q}
+          value={value}
+          onChange={onChange}
+          onFocus={onFocus}
+          otherValue={otherValue}
+          onOtherChange={onOtherChange}
+        />
       </div>
       <style jsx>{`
         .field { display: flex; flex-direction: column; gap: 14px; }
@@ -352,7 +393,11 @@ function Field({ q, index, value, onChange }: { q: Question; index: number; valu
   );
 }
 
-function Input({ q, value, onChange, onFocus }: { q: Question; value: any; onChange: (v: any) => void; onFocus: () => void }) {
+function Input({ q, value, onChange, onFocus, otherValue, onOtherChange }: {
+  q: Question; value: any; onChange: (v: any) => void; onFocus: () => void;
+  otherValue?: string; onOtherChange?: (v: string) => void;
+}) {
+  const isOtherChoice = (c: string) => c.toLowerCase() === 'other';
   const cls = 'fld';
   const styleTag = (
     <style jsx>{`
@@ -415,6 +460,23 @@ function Input({ q, value, onChange, onFocus }: { q: Question; value: any; onCha
       }
       .marker.radio { border-radius: 50%; }
       .marker.on { background: #fff; }
+      .ctxt { flex-shrink: 0; }
+      .other-input {
+        flex: 1;
+        margin-left: auto;
+        background: #000;
+        color: #fff;
+        border: none;
+        border-bottom: 1px solid rgba(255,255,255,0.45);
+        padding: 6px 4px;
+        font: inherit;
+        font-family: var(--font-mono), ui-monospace, monospace;
+        font-size: 16px;
+        letter-spacing: 0.01em;
+        min-width: 120px;
+      }
+      .other-input::placeholder { color: rgba(255,255,255,0.35); }
+      .other-input:focus { outline: none; border-bottom-color: #fff; }
     `}</style>
   );
   switch (q.type) {
@@ -444,13 +506,28 @@ function Input({ q, value, onChange, onFocus }: { q: Question; value: any; onCha
       return (
         <>
           <div className="choices" onFocus={onFocus}>
-            {(q.choices || []).map(c => (
-              <label key={c}>
-                <input type="radio" name={q.id} checked={value === c} onChange={() => onChange(c)} />
-                <span className={`marker radio ${value === c ? 'on' : ''}`} />
-                <span>{c}</span>
-              </label>
-            ))}
+            {(q.choices || []).map(c => {
+              const checked = value === c;
+              const other = isOtherChoice(c);
+              return (
+                <label key={c}>
+                  <input type="radio" name={q.id} checked={checked} onChange={() => onChange(c)} />
+                  <span className={`marker radio ${checked ? 'on' : ''}`} />
+                  <span className="ctxt">{c}</span>
+                  {other && checked && (
+                    <input
+                      type="text"
+                      className="other-input"
+                      placeholder="please specify"
+                      value={otherValue || ''}
+                      onChange={e => onOtherChange?.(e.target.value)}
+                      onClick={e => e.stopPropagation()}
+                      onFocus={onFocus}
+                    />
+                  )}
+                </label>
+              );
+            })}
           </div>
           {styleTag}
         </>
@@ -462,6 +539,7 @@ function Input({ q, value, onChange, onFocus }: { q: Question; value: any; onCha
             {(q.choices || []).map(c => {
               const arr: string[] = Array.isArray(value) ? value : [];
               const checked = arr.includes(c);
+              const other = isOtherChoice(c);
               return (
                 <label key={c}>
                   <input type="checkbox" checked={checked} onChange={() => {
@@ -469,7 +547,18 @@ function Input({ q, value, onChange, onFocus }: { q: Question; value: any; onCha
                     onChange(next);
                   }} />
                   <span className={`marker ${checked ? 'on' : ''}`} />
-                  <span>{c}</span>
+                  <span className="ctxt">{c}</span>
+                  {other && checked && (
+                    <input
+                      type="text"
+                      className="other-input"
+                      placeholder="please specify"
+                      value={otherValue || ''}
+                      onChange={e => onOtherChange?.(e.target.value)}
+                      onClick={e => e.stopPropagation()}
+                      onFocus={onFocus}
+                    />
+                  )}
                 </label>
               );
             })}

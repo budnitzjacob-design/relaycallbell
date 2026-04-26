@@ -76,8 +76,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           font-size: 11px; letter-spacing: 0.32em;
         }
         .dot { width: 10px; height: 10px; border-radius: 50%;
-          background: radial-gradient(circle at 35% 30%, #ff8a1c, #ff5a1f 50%, #c11414);
-          box-shadow: 0 0 18px rgba(255,90,31,0.6);
+          background: radial-gradient(circle at 35% 30%, #ff5a5a, #dc2626 50%, #7f1d1d);
+          box-shadow: 0 0 18px rgba(220, 38, 38, 0.6);
         }
         nav { display: flex; gap: 8px; flex-wrap: wrap; }
         nav :global(a) {

@@ -160,9 +160,18 @@ export default function Pulse() {
           border: 1px solid rgba(245,240,230,0.2);
           padding: 8px 12px;
           font: inherit;
-          font-size: 12px;
-          letter-spacing: 0.12em;
+          font-size: 16px; /* prevent iOS zoom on focus */
+          letter-spacing: 0.06em;
           min-width: 200px;
+          flex: 1 1 200px;
+        }
+        @media (max-width: 640px) {
+          .filter { gap: 6px; }
+          .filter input { min-width: 0; flex-basis: 140px; padding: 8px 10px; }
+          .count { width: 100%; margin-left: 0; }
+          .bars { height: 110px; gap: 2px; }
+          .day { display: none; }
+          th, td { padding: 8px 10px; font-size: 11px; }
         }
         .filter input:focus { outline: none; border-color: #ff5a1f; }
         .count { margin-left: auto; font-size: 11px; opacity: 0.6; letter-spacing: 0.2em; }
@@ -196,16 +205,24 @@ function Tile({ label, v }: { label: string; v: number }) {
           display: flex; flex-direction: column;
           padding: 32px 24px;
           border-right: 1px solid rgba(245,240,230,0.12);
+          min-width: 0;
         }
         .tile:last-child { border-right: none; }
         .t-label { font-size: 10px; letter-spacing: 0.32em; opacity: 0.6; margin-bottom: 12px; }
         .t-val {
           font-family: var(--font-garamond), serif;
-          font-size: clamp(48px, 6vw, 96px);
+          font-size: clamp(36px, 6vw, 96px);
           line-height: 0.9;
           font-weight: 500;
           color: #fff;
           letter-spacing: -0.04em;
+          word-break: break-all;
+        }
+        @media (max-width: 640px) {
+          .tile { padding: 22px 14px; }
+          .t-label { font-size: 9px; letter-spacing: 0.24em; margin-bottom: 8px; }
+          .t-val { font-size: clamp(28px, 9vw, 44px); }
+          .tile:nth-child(2) { border-right: none; }
         }
       `}</style>
     </div>

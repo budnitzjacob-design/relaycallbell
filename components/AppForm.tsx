@@ -53,9 +53,13 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
       <div className="bar">
         <div className="brand">
           <span className="bdot" />
-          <span>RELAY · CLINICAL PILOT</span>
+          <span className="brand-full">RELAY · CLINICAL PILOT</span>
+          <span className="brand-short">RELAY</span>
         </div>
-        <a href="/" className="back">BACK · HOME</a>
+        <a href="/" className="back">
+          <span className="back-full">BACK · HOME</span>
+          <span className="back-short">BACK</span>
+        </a>
       </div>
 
       <div className={`wrap ${done ? 'fade-out' : ''}`}>
@@ -110,7 +114,8 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
           -webkit-backdrop-filter: blur(14px);
           z-index: 50;
         }
-        .brand { display: flex; align-items: center; gap: 12px; font-size: 11px; letter-spacing: 0.32em; color: #cbd6ec; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 11px; letter-spacing: 0.32em; color: #cbd6ec; min-width: 0; }
+        .brand-short { display: none; }
         .bdot {
           width: 11px; height: 11px; border-radius: 50%;
           background:
@@ -122,24 +127,15 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
         }
         .back {
           text-decoration: none; color: #e8eef7;
-          border: 1px solid rgba(160,180,220,0.28);
-          padding: 8px 18px; border-radius: 4px;
+          border: 1px solid rgba(255,255,255,0.95);
+          padding: 8px 18px;
           font: inherit; font-size: 11px; letter-spacing: 0.32em; font-weight: 700;
-          background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.18));
-          box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.12),
-            inset 0 -1px 0 rgba(0,0,0,0.3),
-            0 4px 10px rgba(0,0,0,0.35);
-          transition: all 220ms ease;
+          background: transparent;
+          flex-shrink: 0;
+          transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
         }
-        .back:hover {
-          color: #fff;
-          border-color: #6a8cff;
-          background: linear-gradient(180deg, rgba(106, 140, 255, 0.18), rgba(15, 29, 61, 0.4));
-          box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.18),
-            0 6px 14px rgba(15, 29, 61, 0.6);
-        }
+        .back:hover { background: #fff; color: #000; border-color: #fff; }
+        .back-short { display: none; }
 
         .wrap {
           position: relative; z-index: 1;
@@ -155,10 +151,10 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
 
         h1 {
           font-family: var(--font-inter), 'Inter', -apple-system, system-ui, sans-serif;
-          font-size: clamp(48px, 7.5vw, 96px);
+          font-size: clamp(36px, 7.5vw, 96px);
           font-weight: 600;
-          margin: 0 0 32px;
-          line-height: 0.96;
+          margin: 0 0 28px;
+          line-height: 1.0;
           letter-spacing: -0.035em;
           color: #fff;
         }
@@ -223,10 +219,19 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
         .rule.wide { height: 1px; background: linear-gradient(90deg, rgba(106,140,255,0), rgba(106,140,255,0.6) 50%, rgba(106,140,255,0)); }
         @keyframes fade-in { to { opacity: 1; } }
 
-        @media (max-width: 520px) {
-          .wrap { padding: 56px 22px 96px; }
-          .questions { gap: 52px; }
-          .intro { font-size: 14px; line-height: 1.6; }
+        @media (max-width: 640px) {
+          .bar { padding: 14px 18px; }
+          .brand-full { display: none; }
+          .brand-short { display: inline; }
+          .back { padding: 7px 14px; }
+          .back-full { display: none; }
+          .back-short { display: inline; }
+          .wrap { padding: 48px 20px 96px; }
+          .questions { gap: 48px; }
+          .intro { font-size: 14px; line-height: 1.6; margin: 0 0 36px; }
+          .rule { margin: 0 0 36px; }
+          .meta { margin-bottom: 20px; }
+          .thanks-bar { padding: 14px 18px; }
         }
       `}</style>
     </main>

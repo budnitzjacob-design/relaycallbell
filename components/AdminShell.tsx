@@ -63,6 +63,14 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           backdrop-filter: blur(12px);
           z-index: 50;
         }
+        @media (max-width: 640px) {
+          .bar { padding: 14px 16px; gap: 12px; }
+          nav :global(a) { padding: 6px 12px; }
+          nav :global(.tab-label) { font-size: 11px; letter-spacing: 0.22em; }
+          nav :global(.tab-sub) { display: none; }
+          .logout { padding: 6px 12px; font-size: 10px; letter-spacing: 0.22em; }
+          .content { padding: 24px 16px 96px; }
+        }
         .brand {
           display: flex; align-items: center; gap: 12px;
           font-size: 11px; letter-spacing: 0.32em;
@@ -71,7 +79,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           background: radial-gradient(circle at 35% 30%, #ff8a1c, #ff5a1f 50%, #c11414);
           box-shadow: 0 0 18px rgba(255,90,31,0.6);
         }
-        nav { display: flex; gap: 8px; }
+        nav { display: flex; gap: 8px; flex-wrap: wrap; }
         nav :global(a) {
           display: flex; flex-direction: column;
           padding: 8px 18px;

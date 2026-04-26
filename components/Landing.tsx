@@ -300,8 +300,13 @@ export default function Landing() {
         .apply:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
         @media (max-width: 520px) {
-          .row { width: min(86vw, 54dvh); }
-          .body-text { font-size: 14px; line-height: 1.45; }
+          .main { padding: 0 6vw; }
+          .row { width: min(88vw, 54dvh); }
+          .body-text { font-size: 13.5px; line-height: 1.46; }
+          .apply { height: 48px; }
+        }
+        @media (max-width: 380px) {
+          .body-text { font-size: 12.5px; line-height: 1.45; }
         }
       `}</style>
     </main>

@@ -193,7 +193,10 @@ export default function Forge() {
         .err { color: #ff5a1f; letter-spacing: 0.3em; font-size: 12px; margin-bottom: 12px; }
 
         .grid { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: flex-start; }
-        @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+        @media (max-width: 800px) {
+          .grid { grid-template-columns: 1fr; gap: 20px; }
+          .sidebar { position: static !important; }
+        }
 
         .sidebar { display: flex; flex-direction: column; gap: 6px; position: sticky; top: 100px; }
         .sidebar h3 { font-size: 10px; letter-spacing: 0.32em; opacity: 0.6; margin: 0 0 12px; font-weight: 700; }

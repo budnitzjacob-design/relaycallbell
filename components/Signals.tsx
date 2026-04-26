@@ -173,9 +173,14 @@ export default function Signals() {
         .export:hover:not([disabled]) { background: #ff5a1f; color: #000; }
         .export[disabled] { opacity: 0.4; }
 
-        .table-wrap { overflow-x: auto; border-top: 1px solid rgba(245,240,230,0.12); }
+        .table-wrap { overflow-x: auto; border-top: 1px solid rgba(245,240,230,0.12); -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: var(--font-mono), monospace; }
-        th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid rgba(245,240,230,0.06); }
+        th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid rgba(245,240,230,0.06); white-space: nowrap; }
+        @media (max-width: 640px) {
+          th, td { padding: 10px 10px; font-size: 11px; }
+          .head { gap: 16px; }
+          .export { font-size: 10px; padding: 8px 14px; }
+        }
         th { cursor: pointer; user-select: none; letter-spacing: 0.2em; font-size: 10px; opacity: 0.75; font-weight: 700; }
         th:hover { color: #ff5a1f; }
         tbody tr:hover { background: rgba(255,90,31,0.05); cursor: pointer; }

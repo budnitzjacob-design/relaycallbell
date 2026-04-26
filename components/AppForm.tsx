@@ -63,13 +63,10 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
       </div>
 
       <div className={`wrap ${done ? 'fade-out' : ''}`}>
-        <div className="meta">APPLICATION · v{version}</div>
         <h1>{schema.title || 'Clinical Pilot'}</h1>
         {schema.intro && <p className="intro">{schema.intro}</p>}
 
         <div className="rule" />
-
-        <SubmitButton onClick={submit} busy={submitting} />
 
         <div className="questions">
           {schema.questions.map((q, i) => (
@@ -308,21 +305,18 @@ function Field({ q, index, value, onChange }: { q: Question; index: number; valu
   const ix = String(index + 1).padStart(2, '0');
   return (
     <div className="field">
-      <div className="head">
+      <div className="ql">
         <span className="ix">{ix}</span>
-        <span className="ty">{q.type.replace('_', ' ').toUpperCase()}{q.required && ' · REQUIRED'}</span>
+        <span>{q.label}{q.required && <em className="req">*</em>}</span>
       </div>
-      <div className="ql">{q.label}</div>
       {q.help && <div className="qh">{q.help}</div>}
       <div className="input-wrap">
         <Input q={q} value={value} onChange={onChange} onFocus={onFocus} />
       </div>
       <style jsx>{`
         .field { display: flex; flex-direction: column; gap: 14px; }
-        .head { display: flex; align-items: center; gap: 14px; font-size: 10px; letter-spacing: 0.28em; margin-bottom: 2px; }
-        .ix { color: #6a8cff; font-weight: 700; }
-        .ty { color: #8a9bbf; font-weight: 700; }
         .ql {
+          display: flex; align-items: baseline; gap: 14px;
           font-family: var(--font-mono), ui-monospace, monospace;
           font-size: clamp(15px, 1.4vw, 17px);
           font-weight: 500;
@@ -330,15 +324,29 @@ function Field({ q, index, value, onChange }: { q: Question; index: number; valu
           color: #fff;
           line-height: 1.4;
         }
+        .ix {
+          color: #6a8cff;
+          font-weight: 700;
+          flex-shrink: 0;
+          font-variant-numeric: tabular-nums;
+        }
+        .req {
+          font-style: normal;
+          color: #6a8cff;
+          margin-left: 4px;
+        }
         .qh {
           font-family: var(--font-mono), monospace;
           font-size: 0.82rem;
           line-height: 1.55;
           color: #97a4c2;
           letter-spacing: 0.02em;
-          margin-top: -4px;
+          padding-left: 36px;
         }
-        .input-wrap { margin-top: 8px; }
+        .input-wrap { margin-top: 8px; padding-left: 36px; }
+        @media (max-width: 520px) {
+          .qh, .input-wrap { padding-left: 32px; }
+        }
       `}</style>
     </div>
   );
@@ -350,74 +358,63 @@ function Input({ q, value, onChange, onFocus }: { q: Question; value: any; onCha
     <style jsx>{`
       .fld {
         width: 100%;
-        background: linear-gradient(180deg, rgba(15,29,61,0.32), rgba(5,10,31,0.45));
+        background: #000;
         color: #fff;
-        border: 1px solid rgba(140,170,230,0.18);
-        border-radius: 4px;
-        padding: 14px 14px;
+        border: 1px solid #fff;
+        border-radius: 0;
+        padding: 20px 18px;
         font: inherit;
         font-family: var(--font-mono), ui-monospace, monospace;
-        font-size: 16px; /* prevent iOS zoom on focus */
+        font-size: 17px; /* prevent iOS zoom + larger / readable */
         letter-spacing: 0.01em;
-        box-shadow:
-          inset 0 1px 0 rgba(0,0,0,0.45),
-          inset 0 0 0 1px rgba(120,160,255,0.05),
-          0 1px 0 rgba(255,255,255,0.04);
-        transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+        line-height: 1.4;
+        transition: border-color 200ms ease, box-shadow 200ms ease;
       }
+      .fld::placeholder { color: rgba(255,255,255,0.35); }
       .fld:focus {
         outline: none;
-        border-color: #6a8cff;
-        background: linear-gradient(180deg, rgba(15,29,61,0.45), rgba(5,10,31,0.55));
-        box-shadow:
-          inset 0 1px 0 rgba(0,0,0,0.5),
-          inset 0 0 0 1px rgba(106,140,255,0.35),
-          0 0 0 3px rgba(106,140,255,0.12),
-          0 8px 22px rgba(10,22,50,0.45);
+        border-color: #fff;
+        box-shadow: 0 0 0 3px rgba(255,255,255,0.18);
       }
-      textarea.fld { min-height: 120px; resize: vertical; line-height: 1.55; }
+      textarea.fld { min-height: 168px; resize: vertical; line-height: 1.6; }
       select.fld {
         appearance: none; -webkit-appearance: none;
+        background-color: #000;
         background-image:
-          linear-gradient(180deg, rgba(15,29,61,0.32), rgba(5,10,31,0.45)),
-          linear-gradient(45deg, transparent 50%, #cbd6ec 50%),
-          linear-gradient(135deg, #cbd6ec 50%, transparent 50%);
-        background-position: 0 0, calc(100% - 14px) center, calc(100% - 8px) center;
-        background-size: auto, 6px 6px, 6px 6px;
+          linear-gradient(45deg, transparent 50%, #fff 50%),
+          linear-gradient(135deg, #fff 50%, transparent 50%);
+        background-position: calc(100% - 18px) center, calc(100% - 12px) center;
+        background-size: 7px 7px, 7px 7px;
         background-repeat: no-repeat;
-        padding-right: 28px;
+        padding-right: 36px;
       }
-      .choices { display: flex; flex-direction: column; gap: 4px; padding-top: 6px; }
+      .choices {
+        display: flex; flex-direction: column; gap: 0;
+        border: 1px solid #fff;
+        background: #000;
+      }
       .choices label {
         display: flex; align-items: center; gap: 18px; cursor: pointer;
-        padding: 18px 0;
-        border-bottom: 1px solid rgba(160,180,220,0.10);
+        padding: 18px 18px;
+        border-bottom: 1px solid rgba(255,255,255,0.18);
         font-family: var(--font-mono), ui-monospace, monospace;
-        font-size: 0.95rem;
-        color: #cbd6ec;
+        font-size: 16px;
+        color: #fff;
         letter-spacing: 0.02em;
-        transition: padding 180ms ease, color 180ms ease;
+        transition: background-color 180ms ease;
       }
-      .choices label:hover { padding-left: 8px; color: #fff; }
-      .choices label:hover .marker { border-color: #6a8cff; }
+      .choices label:last-child { border-bottom: none; }
+      .choices label:hover { background: rgba(255,255,255,0.06); }
       .choices input { display: none; }
       .marker {
         width: 16px; height: 16px;
-        border: 1px solid rgba(140,170,230,0.55);
+        border: 1px solid #fff;
         flex-shrink: 0;
-        background: linear-gradient(180deg, rgba(15,29,61,0.4), rgba(5,10,31,0.5));
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-        transition: all 180ms ease;
+        background: transparent;
+        transition: background-color 180ms ease;
       }
       .marker.radio { border-radius: 50%; }
-      .marker.on {
-        background:
-          radial-gradient(circle at 35% 28%, #8aaaff 0%, #2a4cb0 45%, #0f1d3d 100%);
-        border-color: #6a8cff;
-        box-shadow:
-          inset 0 1px 1px rgba(255,255,255,0.4),
-          0 0 10px rgba(106,140,255,0.45);
-      }
+      .marker.on { background: #fff; }
     `}</style>
   );
   switch (q.type) {

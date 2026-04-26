@@ -30,7 +30,7 @@ const TS = (() => {
   const expandStart = T.introLogoDur + T.introHold;
   const mainStart = expandStart + T.expandDur;
   const bodyStart = mainStart + T.postExpandHold;
-  const logoStart = bodyStart + T.bodyDur - 1050;
+  const logoStart = bodyStart;                          // logo + body enter together
   const buttonStart = bodyStart + T.bodyDur + 3500;
   return { expandStart, mainStart, bodyStart, logoStart, buttonStart };
 })();

@@ -233,17 +233,16 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
   );
 }
 
-/** Gradient + 3D submit button (deep navy, layered highlights, subtle texture). */
+/** Submit button: black/white outline → white on hover → green on click. */
 function SubmitButton({ onClick, busy }: { onClick: () => void; busy: boolean }) {
   return (
     <button className="submit" onClick={onClick} disabled={busy} type="button">
-      <span className="lbl">{busy ? 'SENDING…' : 'SUBMIT'}</span>
+      {busy ? 'SENDING…' : 'SUBMIT'}
       <style jsx>{`
         .submit {
           display: block;
-          position: relative;
           width: 100%;
-          height: 64px;
+          height: 56px;
           margin: 40px 0;
           padding: 0;
           font: inherit;
@@ -251,77 +250,23 @@ function SubmitButton({ onClick, busy }: { onClick: () => void; busy: boolean })
           font-weight: 700;
           letter-spacing: 0.36em;
           font-size: 13px;
-          color: #e8efff;
+          color: #fff;
+          background: #000;
+          border: 1px solid #fff;
+          border-radius: 0;
           cursor: pointer;
-          border: 1px solid rgba(140,170,230,0.35);
-          border-radius: 6px;
-          background:
-            /* glossy highlight on top half */
-            linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 38%, rgba(0,0,0,0.28) 100%),
-            /* warm side lights */
-            radial-gradient(120% 60% at 12% 0%, rgba(120,160,255,0.32), transparent 60%),
-            radial-gradient(120% 60% at 88% 0%, rgba(80,120,220,0.25), transparent 55%),
-            /* base navy gradient — heavy darker emphasis */
-            linear-gradient(180deg, #2a4380 0%, #1a2c63 28%, #0f1d3d 58%, #050a1f 100%);
-          box-shadow:
-            inset 0 1px 0 rgba(180,210,255,0.55),
-            inset 0 -1px 0 rgba(0,0,0,0.55),
-            inset 0 0 0 1px rgba(120,160,255,0.18),
-            0 1px 0 rgba(255,255,255,0.05),
-            0 8px 18px rgba(10, 22, 50, 0.6),
-            0 18px 40px rgba(0, 0, 0, 0.6);
-          transform: translateY(0);
-          transition:
-            transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
-            box-shadow 140ms cubic-bezier(0.22, 1, 0.36, 1),
-            filter 140ms ease;
-          overflow: hidden;
-        }
-        /* Subtle texture: a fine noise dotting */
-        .submit::after {
-          content: '';
-          position: absolute; inset: 0;
-          background-image:
-            radial-gradient(1px 1px at 18% 30%, rgba(255,255,255,0.05), transparent 60%),
-            radial-gradient(1.2px 1.2px at 62% 70%, rgba(255,255,255,0.04), transparent 60%),
-            radial-gradient(1px 1px at 84% 22%, rgba(255,255,255,0.04), transparent 60%);
-          background-size: 90px 60px, 130px 80px, 70px 50px;
-          mix-blend-mode: overlay;
-          pointer-events: none;
-        }
-        .submit::before {
-          content: '';
-          position: absolute;
-          left: 6%; right: 6%; top: 4%;
-          height: 38%;
-          background: linear-gradient(180deg, rgba(255,255,255,0.32), rgba(255,255,255,0));
-          border-radius: 999px;
-          filter: blur(6px);
-          pointer-events: none;
+          transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
         }
         .submit:hover:not([disabled]) {
-          transform: translateY(-1px);
-          filter: brightness(1.08);
-          border-color: rgba(180,210,255,0.5);
-          box-shadow:
-            inset 0 1px 0 rgba(200,225,255,0.65),
-            inset 0 -1px 0 rgba(0,0,0,0.55),
-            inset 0 0 0 1px rgba(140,180,255,0.32),
-            0 2px 0 rgba(255,255,255,0.06),
-            0 12px 26px rgba(10, 22, 50, 0.7),
-            0 24px 50px rgba(0, 0, 0, 0.7);
+          background: #fff;
+          color: #000;
         }
         .submit:active:not([disabled]) {
-          transform: translateY(2px);
-          box-shadow:
-            inset 0 2px 6px rgba(0,0,0,0.55),
-            inset 0 0 0 1px rgba(120,160,255,0.18),
-            0 2px 6px rgba(10, 22, 50, 0.5),
-            0 4px 14px rgba(0, 0, 0, 0.55);
-          filter: brightness(0.96);
+          background: #16a34a;
+          color: #fff;
+          border-color: #16a34a;
         }
-        .submit[disabled] { opacity: 0.6; cursor: wait; }
-        .lbl { position: relative; z-index: 1; }
+        .submit[disabled] { opacity: 0.55; cursor: wait; }
       `}</style>
     </button>
   );

@@ -66,11 +66,11 @@ export default function Login() {
           margin-bottom: 24px;
         }
         h1 {
-          font-family: var(--font-garamond), serif;
-          font-size: clamp(72px, 12vw, 144px);
-          font-weight: 500;
+          font-family: var(--font-inter), 'Inter', -apple-system, system-ui, sans-serif;
+          font-size: clamp(64px, 10vw, 120px);
+          font-weight: 700;
           margin: 0 0 32px;
-          line-height: 0.85;
+          line-height: 0.92;
           letter-spacing: -0.04em;
           color: #fff;
         }

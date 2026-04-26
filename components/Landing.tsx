@@ -10,10 +10,10 @@ const BODY = `The hospital call bell is one of the most critical communication l
 
 RELAY is an AI enabled call bell system that translates and transcribes patient calls, triages their urgency, and instantly displays them for provider review and response. Built as a software only layer on existing hospital call bell systems, RELAY requires no new hardware, provides live transcription and translation into 98 different patient languages, and automatically records the outcomes and responsiveness data. With RELAY, every call becomes a structured data point, enabling quality improvement analyses by unit, provider, diagnosis, shift, or patient demographic that have never before been possible at scale. Patients benefit from faster, personalized, multilingual care; nurses experience reduced alarm fatigue and cognitive burden; and hospital leadership gains a real-time QI platform that help prevent falls and improve revenues without having to burden the patient.`;
 
-// Pixel-measured constants from /public/relay-logo.png (3000x2000)
-const DOT_CX_FRAC = 0.8802;
-const DOT_CY_FRAC = 0.4733;
-const DOT_DIAM_FRAC = 0.0657;
+// Pixel-measured constants for /public/relay-logo.png (trimmed to 2592x293).
+const DOT_CX_FRAC = 0.9616;
+const DOT_CY_FRAC = 0.5000;
+const DOT_DIAM_FRAC = 0.0760;
 
 const T = {
   introLogoDur: 4000,    // simple opacity fade

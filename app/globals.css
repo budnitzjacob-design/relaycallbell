@@ -1,0 +1,45 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-garamond), 'EB Garamond', 'Apple Garamond', Garamond, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+a { color: inherit; }
+button { font-family: inherit; }
+
+/* Hide native cursor when our custom cursor is active (only on hover-capable devices) */
+@media (hover: hover) and (pointer: fine) {
+  html.cursor-hidden,
+  html.cursor-hidden body,
+  html.cursor-hidden * {
+    cursor: none !important;
+  }
+}
+
+/* Selection colors are page-scoped for variety. Defaults are dark-blue/white. */
+::selection {
+  background: #0a1838;
+  color: #fff;
+}
+
+/* Admin keeps the orange selection to match its accent palette */
+.theme-admin ::selection {
+  background: #ff5a1f;
+  color: #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -8,9 +8,9 @@ import { track } from '@/lib/tracker';
 
 const BODY = `The hospital call bell is one of the most critical communication lines between patient and provider: call bell responsiveness is correlated with decreased patient falls and increased patient satisfaction and mobilizes care in critical scenarios. Despite their importance, call bell systems have not been meaningfully updated in decades. RELAY changes this.
 
-RELAY is an AI enabled call bell system that translates and transcribes patient calls, triages their urgency, and instantly displays them for provider review and response. Built as a software only layer on existing hospital call bell systems, RELAY requires no new hardware, provides live transcription and translation into 98 different patient languages, and automatically records the outcomes and responsiveness data. With RELAY, every call becomes a structured data point, enabling quality improvement analyses by unit, provider, diagnosis, shift, or patient demographic that have never before been possible at scale. Patients benefit from faster, personalized, multilingual care; nurses experience reduced alarm fatigue and cognitive burden; and hospital leadership gains a real-time QI platform that help prevent falls and improve revenues without having to burden the patient.
+RELAY is an AI enabled call bell system that translates and transcribes patient calls, triages their urgency, and instantly displays them for provider review and response. Built as a software only layer on existing hospital call bell systems, RELAY requires no new hardware, provides live transcription and translation into 98 different patient languages, and automatically records the outcomes and responsiveness data. With RELAY, every call becomes a structured data point, enabling quality improvement analyses by unit, provider, diagnosis, shift, or patient demographic that have never before been possible at scale. Patients benefit from faster, personalized, multilingual care; nurses experience reduced alarm fatigue and cognitive burden; and hospital leadership gains a real-time QI platform that help prevent falls and improve revenues without having to burden the patient. More information coming soon.`;
 
-More information coming soon - Jacob Budnitz, Troy Schouten, Sophie Walsh`;
+const BYLINE = 'Jacob Budnitz — Troy Schouten — Sophie Walsh';
 
 // Pixel-measured constants for /public/relay-logo.png (trimmed to 2592x293).
 const DOT_CX_FRAC = 0.9616;
@@ -142,6 +142,7 @@ export default function Landing() {
             {BODY.split('\n\n').map((p, i) => (
               <p key={i} className="bp" style={{ ['--bp-i' as any]: i }}>{p}</p>
             ))}
+            <p className="bp byline" style={{ ['--bp-i' as any]: 2 }}>{BYLINE}</p>
           </div>
         </div>
         <div className={`row btn-row ${buttonVisible ? 'in' : ''}`}>
@@ -258,6 +259,13 @@ export default function Landing() {
         }
         .body-text p { margin: 0 0 0.7em 0; }
         .body-text p:last-child { margin-bottom: 0; }
+        .byline {
+          /* Spread to fill the body-square width, dashes between names. */
+          text-align: justify;
+          text-align-last: justify;
+          margin-top: 1.2em !important;
+          letter-spacing: 0.01em;
+        }
 
         .bp {
           opacity: 0;

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { EB_Garamond, JetBrains_Mono } from 'next/font/google';
+import { EB_Garamond, JetBrains_Mono, Inter } from 'next/font/google';
 import CursorDot from '@/components/CursorDot';
 import './globals.css';
 
@@ -14,6 +14,13 @@ const mono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
   variable: '--font-mono',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -33,7 +40,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${garamond.variable} ${mono.variable}`}>
+    <html lang="en" className={`${garamond.variable} ${mono.variable} ${inter.variable}`}>
       <body>
         <CursorDot />
         {children}

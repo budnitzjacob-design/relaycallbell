@@ -50,9 +50,6 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
 
   return (
     <main className="root">
-      {/* Subtle texture layer */}
-      <div className="grain" aria-hidden />
-
       <div className="bar">
         <div className="brand">
           <span className="bdot" />
@@ -99,33 +96,18 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
           min-height: 100dvh;
           color: #e8eef7;
           font-family: var(--font-mono), ui-monospace, monospace;
-          background:
-            radial-gradient(1200px 700px at 80% -10%, rgba(30, 58, 138, 0.32), transparent 60%),
-            radial-gradient(900px 600px at -10% 110%, rgba(15, 29, 61, 0.45), transparent 60%),
-            linear-gradient(180deg, #060912 0%, #050810 60%, #030509 100%);
+          background: #000;
           position: relative;
           overflow-x: hidden;
-        }
-        .grain {
-          position: fixed; inset: 0;
-          pointer-events: none; z-index: 0;
-          opacity: 0.5;
-          mix-blend-mode: overlay;
-          background-image:
-            radial-gradient(1.2px 1.2px at 25% 35%, rgba(255,255,255,0.08), transparent 60%),
-            radial-gradient(1.5px 1.5px at 70% 60%, rgba(255,255,255,0.06), transparent 60%),
-            radial-gradient(1px 1px at 50% 80%, rgba(255,255,255,0.05), transparent 60%);
-          background-size: 200px 200px, 280px 280px, 160px 160px;
         }
         .bar {
           display: flex; align-items: center; justify-content: space-between;
           padding: 18px 28px;
           border-bottom: 1px solid rgba(160,180,220,0.12);
           position: sticky; top: 0;
-          background:
-            linear-gradient(180deg, rgba(8, 14, 30, 0.75), rgba(8, 14, 30, 0.55));
-          backdrop-filter: blur(14px) saturate(120%);
-          -webkit-backdrop-filter: blur(14px) saturate(120%);
+          background: rgba(0,0,0,0.85);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
           z-index: 50;
         }
         .brand { display: flex; align-items: center; gap: 12px; font-size: 11px; letter-spacing: 0.32em; color: #cbd6ec; }
@@ -172,12 +154,12 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
         .meta.footer { margin-top: 56px; margin-bottom: 0; opacity: 0.55; }
 
         h1 {
-          font-family: var(--font-garamond), 'EB Garamond', 'Apple Garamond', Garamond, serif;
-          font-size: clamp(56px, 9vw, 120px);
-          font-weight: 500;
+          font-family: var(--font-inter), 'Inter', -apple-system, system-ui, sans-serif;
+          font-size: clamp(48px, 7.5vw, 96px);
+          font-weight: 600;
           margin: 0 0 32px;
-          line-height: 0.86;
-          letter-spacing: -0.04em;
+          line-height: 0.96;
+          letter-spacing: -0.035em;
           color: #fff;
         }
         .intro {
@@ -209,10 +191,7 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
           z-index: 100;
           display: flex; flex-direction: column;
           opacity: 0;
-          background:
-            radial-gradient(1200px 700px at 80% -10%, rgba(30, 58, 138, 0.32), transparent 60%),
-            radial-gradient(900px 600px at -10% 110%, rgba(15, 29, 61, 0.45), transparent 60%),
-            linear-gradient(180deg, #060912 0%, #050810 60%, #030509 100%);
+          background: #000;
           animation: fade-in 1100ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
         .thanks-bar {
@@ -232,13 +211,14 @@ export default function AppForm({ schema, version }: { schema: Schema; version: 
         }
         .thanks-meta { font-size: 10px; letter-spacing: 0.32em; color: #6a8cff; margin-bottom: 24px; font-weight: 700; }
         .thanks-inner p {
-          font-family: var(--font-garamond), serif;
-          font-size: clamp(36px, 7vw, 96px);
-          font-weight: 500;
+          font-family: var(--font-inter), 'Inter', -apple-system, system-ui, sans-serif;
+          font-size: clamp(32px, 5.6vw, 72px);
+          font-weight: 600;
           color: #fff;
-          line-height: 0.96;
-          letter-spacing: -0.03em;
+          line-height: 1.05;
+          letter-spacing: -0.025em;
           margin: 0 0 48px;
+          max-width: 18ch;
         }
         .rule.wide { height: 1px; background: linear-gradient(90deg, rgba(106,140,255,0), rgba(106,140,255,0.6) 50%, rgba(106,140,255,0)); }
         @keyframes fade-in { to { opacity: 1; } }
@@ -359,9 +339,9 @@ function Field({ q, index, value, onChange }: { q: Question; index: number; valu
           .section { margin-top: 14px; }
           .rule { height: 1px; background: linear-gradient(90deg, rgba(106,140,255,0), rgba(106,140,255,0.45) 50%, rgba(106,140,255,0)); margin-bottom: 22px; }
           h2 {
-            font-family: var(--font-garamond), serif;
-            font-size: clamp(28px, 3.4vw, 40px);
-            font-weight: 500;
+            font-family: var(--font-inter), 'Inter', -apple-system, system-ui, sans-serif;
+            font-size: clamp(24px, 2.8vw, 32px);
+            font-weight: 600;
             margin: 0 0 8px;
             letter-spacing: -0.02em;
             color: #fff;

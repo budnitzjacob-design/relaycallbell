@@ -16,7 +16,7 @@ const DOT_CY_FRAC = 0.4733;
 const DOT_DIAM_FRAC = 0.0657;
 
 const T = {
-  introLogoDur: 5950,
+  introLogoDur: 4000,    // simple opacity fade
   introHold: 1260,
   expandDur: 1680,
   postExpandHold: 420,
@@ -149,9 +149,7 @@ export default function Landing() {
             onMouseEnter={() => track('hover', { target: 'apply_button' })}
             aria-label="Application for clinical pilot"
           >
-            <span className="apply-inner">
-              <Marquee text="APPLICATION FOR CLINICAL PILOT" duration={20} />
-            </span>
+            <Marquee text="APPLICATION FOR CLINICAL PILOT" duration={20} />
           </button>
         </div>
       </section>
@@ -180,23 +178,18 @@ export default function Landing() {
         }
         .intro-layer.gone { opacity: 0; pointer-events: none; }
 
+        /* Simple opacity fade, 4s, no scale, no blur */
         .intro-logo-wrap {
           width: min(58vw, 880px);
           opacity: 0;
-          transform: scale(0.62);
-          filter: blur(14px);
-          animation: introIn ${T.introLogoDur}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-          will-change: opacity, transform, filter;
+          animation: introIn ${T.introLogoDur}ms ease-out forwards;
+          will-change: opacity;
         }
         @keyframes introIn {
-          0%   { opacity: 0;   transform: scale(0.62); filter: blur(14px); }
-          45%  { opacity: 0.42; transform: scale(0.78); filter: blur(8px);  }
-          75%  { opacity: 0.82; transform: scale(0.93); filter: blur(2px); }
-          100% { opacity: 1;   transform: scale(1);    filter: blur(0); }
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
 
-        /* Standalone expanding dot — kept invisible during the intro phase to
-           prevent a ghost dot from appearing alongside the PNG's built-in dot. */
         .dot-expand {
           position: fixed; z-index: 6;
           border-radius: 50%;
@@ -221,7 +214,7 @@ export default function Landing() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          gap: calc(100dvh / 15);
+          gap: 0;                /* zero space between logo, text, button */
           padding: 0 4vw;
           opacity: 0;
           transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -288,63 +281,23 @@ export default function Landing() {
         }
         .btn-row.in { opacity: 1; filter: blur(0); transform: translateY(0); }
 
-        /* 3D button. Subtle dark-glass interior, white hairline border,
-           top highlight + drop shadow. Hover turns it solid black. */
+        /* Standard button: white border, transparent fill, hover → solid black */
         .apply {
           width: 100%;
           height: clamp(44px, 5.4dvh, 56px);
           padding: 0;
+          background: transparent;
           color: #fff;
           border: 1px solid rgba(255,255,255,0.95);
-          border-radius: 4px;
+          border-radius: 0;
           cursor: pointer;
           overflow: hidden;
           position: relative;
           font-family: inherit;
-          background:
-            linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 36%, rgba(0,0,0,0.35) 100%),
-            linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.32));
-          box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.45),
-            inset 0 -1px 0 rgba(0,0,0,0.45),
-            0 1px 0 rgba(255,255,255,0.10),
-            0 6px 14px rgba(0, 0, 0, 0.42),
-            0 14px 32px rgba(0, 0, 0, 0.4);
-          transition:
-            background-color 220ms ease,
-            border-color 220ms ease,
-            transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
-            box-shadow 160ms cubic-bezier(0.22, 1, 0.36, 1);
+          transition: background-color 220ms ease, border-color 220ms ease;
         }
-        .apply::before {
-          content: '';
-          position: absolute;
-          left: 6%; right: 6%; top: 4%;
-          height: 36%;
-          background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0));
-          border-radius: 999px;
-          filter: blur(5px);
-          pointer-events: none;
-        }
-        .apply:hover {
-          background: #000;
-          border-color: #000;
-          transform: translateY(-1px);
-          box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.18),
-            inset 0 -1px 0 rgba(0,0,0,0.6),
-            0 1px 0 rgba(255,255,255,0.06),
-            0 10px 22px rgba(0, 0, 0, 0.55),
-            0 22px 44px rgba(0, 0, 0, 0.5);
-        }
-        .apply:active {
-          transform: translateY(1px);
-          box-shadow:
-            inset 0 2px 6px rgba(0,0,0,0.6),
-            0 2px 6px rgba(0, 0, 0, 0.4);
-        }
+        .apply:hover { background: #000; border-color: #000; }
         .apply:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-        .apply-inner { position: relative; z-index: 1; display: block; height: 100%; width: 100%; }
 
         @media (max-width: 520px) {
           .row { width: min(86vw, 54dvh); }

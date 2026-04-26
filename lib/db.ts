@@ -116,11 +116,11 @@ async function makePostgres(): Promise<DBAdapter> {
   return {
     exec: async (raw) => {
       const stmts = raw.split(/;\s*\n/).map(s => s.trim()).filter(Boolean);
-      for (const s of stmts) await sql.query(s);
+      for (const s of stmts) await sql(s);
     },
-    all: async (raw, params = []) => (await sql.query(conv(raw), params)) as any,
-    get: async (raw, params = []) => ((await sql.query(conv(raw), params))[0]) as any,
-    run: async (raw, params = []) => { await sql.query(conv(raw), params); },
+    all: async (raw, params = []) => (await sql(conv(raw), params)) as any,
+    get: async (raw, params = []) => ((await sql(conv(raw), params))[0]) as any,
+    run: async (raw, params = []) => { await sql(conv(raw), params); },
   };
 }
 

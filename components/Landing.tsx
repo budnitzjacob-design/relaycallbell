@@ -179,7 +179,11 @@ export default function Landing() {
           opacity: 1;
           transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .intro-layer.gone { opacity: 0; pointer-events: none; }
+        /* Hide the intro layer instantly the moment the dot finishes expanding —
+           the standalone expanding gradient ball is opaque and covers the entire
+           viewport at this point, so the underlying wordmark is never seen. This
+           prevents a brief flash of the original wordmark while the dot fades. */
+        .intro-layer.gone { opacity: 0; pointer-events: none; transition: opacity 0s; }
 
         /* Simple opacity fade, 4s, no scale, no blur */
         .intro-logo-wrap {
@@ -193,10 +197,20 @@ export default function Landing() {
           to   { opacity: 1; }
         }
 
+        /* Expanding ball is a circular cutout of the same background-gradient
+           image used for the final page background. background-attachment: fixed
+           anchors the gradient to the viewport, so as this circle scales up,
+           more of the (viewport-positioned) gradient is revealed; when the ball
+           covers the whole screen, the visible image matches the bg-gradient
+           layer beneath it exactly — seamless handoff. */
         .dot-expand {
           position: fixed; z-index: 6;
           border-radius: 50%;
-          background: radial-gradient(circle at 50% 35%, #ff3838 0%, #dc2626 38%, #7f1d1d 100%);
+          background-image: url('/relay-gradient.jpg');
+          background-size: 100vw 100vh;
+          background-position: center center;
+          background-attachment: fixed;
+          background-repeat: no-repeat;
           transform: scale(1);
           opacity: 0;
           will-change: transform, opacity;
@@ -217,7 +231,7 @@ export default function Landing() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          gap: 0;                /* zero space between logo, text, button */
+          gap: clamp(10px, 1.4vh, 18px);   /* a hair of breathing room between rows */
           padding: 0 4vw;
           opacity: 0;
           transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);

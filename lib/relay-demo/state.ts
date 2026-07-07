@@ -551,24 +551,72 @@ function buildResolvedCalls() {
 }
 
 function buildHistoricalCalls() {
-  return Array.from({ length: 84 }, (_, i) => {
-    const patient = defaultPatients[i % defaultPatients.length];
-    const triage = (i % 10 === 0 ? 'emergent' : i % 3 === 0 ? 'urgent' : 'routine') as TriageLevel;
-    const wait = triage === 'emergent' ? 35 + (i % 6) * 9 : triage === 'urgent' ? 105 + (i % 8) * 22 : 160 + (i % 10) * 31;
-    const ts = new Date();
-    ts.setDate(ts.getDate() - (1 + (i % 30)));
-    ts.setHours((i * 3) % 24, (i * 7) % 60, 0, 0);
-    const call = callFromSpec([`hist-${i + 1}`, patient.id, triage, 'resolved', providers[i % providers.length], Math.max(60, Math.floor((Date.now() - +ts) / 1000)), demoTranscript(triage), null, demoSummary(triage, patient.fall_risk), [triage, patient.language_label.toLowerCase()]]);
-    call.timestamp = ts.toISOString();
-    call.resolved_at = new Date(+ts + (wait + 240) * 1000).toISOString();
-    call.assigned_at = new Date(+ts + 30 * 1000).toISOString();
-    call.arrived_at = new Date(+ts + wait * 1000).toISOString();
-    call.wait_time_seconds = wait;
-    call.shift = ((i * 3) % 24) >= 19 || ((i * 3) % 24) < 7 ? 'night' : 'day';
-    call.resolution = call.ai_summary;
-    call.outcome = 'Resolved at bedside';
-    return call;
-  });
+  const calls: RelayCall[] = [];
+  for (let daysAgo = 1; daysAgo <= 365; daysAgo += 1) {
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    date.setSeconds(0, 0);
+
+    const dayOfWeek = date.getDay();
+    const weekdayLift = dayOfWeek >= 1 && dayOfWeek <= 4 ? 1 : 0;
+    const recentLift = daysAgo <= 14 ? 3 + (daysAgo % 3) : daysAgo <= 45 ? 1 : 0;
+    const quarterlyAuditSpike = daysAgo % 91 <= 2 ? 2 : 0;
+    const fallDrillSpike = daysAgo % 37 === 0 ? 2 : 0;
+    const seasonalLift = daysAgo > 210 && daysAgo < 300 ? 1 : 0;
+    const dailyCount = 1 + ((daysAgo * 7) % 3) + weekdayLift + recentLift + quarterlyAuditSpike + fallDrillSpike + seasonalLift;
+
+    for (let j = 0; j < dailyCount; j += 1) {
+      const index = calls.length;
+      const patient = defaultPatients[(daysAgo * 5 + j * 3) % defaultPatients.length];
+      const triage = historicalTriage(daysAgo, j);
+      const wait = historicalWaitSeconds(triage, daysAgo, j);
+      const hour = (daysAgo * 7 + j * 5) % 24;
+      const minute = (daysAgo * 11 + j * 13) % 60;
+      const ts = new Date(date);
+      ts.setHours(hour, minute, 0, 0);
+      const call = callFromSpec([
+        `hist-${daysAgo}-${j}`,
+        patient.id,
+        triage,
+        'resolved',
+        providers[(daysAgo + j) % providers.length],
+        Math.max(60, Math.floor((Date.now() - +ts) / 1000)),
+        demoTranscript(triage),
+        null,
+        demoSummary(triage, patient.fall_risk),
+        [triage, patient.language_label.toLowerCase(), shiftForHour(hour)],
+      ]);
+      call.timestamp = ts.toISOString();
+      call.assigned_at = new Date(+ts + 20 * 1000).toISOString();
+      call.arrived_at = new Date(+ts + wait * 1000).toISOString();
+      call.resolved_at = new Date(+ts + (wait + 180 + ((daysAgo + j) % 7) * 35) * 1000).toISOString();
+      call.wait_time_seconds = wait;
+      call.shift = shiftForHour(hour);
+      call.resolution = call.ai_summary;
+      call.outcome = index % 11 === 0 ? 'Escalated to charge nurse' : index % 7 === 0 ? 'Provider notified and reassessed' : 'Resolved at bedside';
+      calls.push(call);
+    }
+  }
+  return calls;
+}
+
+function historicalTriage(daysAgo: number, index: number): TriageLevel {
+  const score = (daysAgo * 17 + index * 29) % 100;
+  if (score < 11 || daysAgo % 53 === 0) return 'emergent';
+  if (score < 39 || index % 7 === 0) return 'urgent';
+  return 'routine';
+}
+
+function historicalWaitSeconds(triage: TriageLevel, daysAgo: number, index: number) {
+  const olderBaselineMultiplier = daysAgo > 180 ? 1.32 : daysAgo > 90 ? 1.16 : daysAgo <= 30 ? 0.82 : 1;
+  const shiftMultiplier = shiftForHour((daysAgo * 7 + index * 5) % 24) === 'night' ? 1.22 : 1;
+  const variability = 1 + (((daysAgo + index * 3) % 9) - 4) / 20;
+  const base = triage === 'emergent'
+    ? 42 + ((daysAgo * 5 + index * 11) % 75)
+    : triage === 'urgent'
+      ? 120 + ((daysAgo * 9 + index * 17) % 240)
+      : 190 + ((daysAgo * 13 + index * 19) % 470);
+  return Math.max(25, Math.round(base * olderBaselineMultiplier * shiftMultiplier * variability));
 }
 
 function callFromSpec(spec: [string, string, TriageLevel, string, string | null, number, string, string | null, string, string[]]): RelayCall {
@@ -723,7 +771,10 @@ function nowMinus(seconds: number) {
 }
 
 function currentShift() {
-  const hour = new Date().getHours();
+  return shiftForHour(new Date().getHours());
+}
+
+function shiftForHour(hour: number) {
   if (hour >= 7 && hour < 15) return 'day';
   if (hour >= 15 && hour < 23) return 'evening';
   return 'night';

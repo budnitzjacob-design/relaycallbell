@@ -116,7 +116,9 @@ async function demoResponse(req: Request, context: RouteContext) {
 }
 
 async function callsForAnalytics(url = new URL('https://relay.local')) {
-  return listCalls(url);
+  const analyticsUrl = new URL(url.toString());
+  analyticsUrl.searchParams.set('limit', '5000');
+  return listCalls(analyticsUrl);
 }
 
 async function analytics(url: URL) {

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" fill="none">
+  <!-- Left node: patient -->
+  <circle cx="10" cy="20" r="5.5" fill="#2dd4a0" opacity="0.9"/>
+
+  <!-- Signal arc 1 (small) -->
+  <path d="M 20 14 Q 28 20 20 26" stroke="#2dd4a0" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+
+  <!-- Signal arc 2 (medium) -->
+  <path d="M 24 11 Q 36 20 24 29" stroke="#2dd4a0" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.35"/>
+
+  <!-- Center relay diamond -->
+  <rect x="44" y="14" width="12" height="12" rx="2" transform="rotate(45 50 20)" fill="#2dd4a0"/>
+
+  <!-- Signal arc 3 (medium, right side) -->
+  <path d="M 76 11 Q 64 20 76 29" stroke="#2dd4a0" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.35"/>
+
+  <!-- Signal arc 4 (small, right side) -->
+  <path d="M 80 14 Q 72 20 80 26" stroke="#2dd4a0" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+
+  <!-- Right node: provider -->
+  <circle cx="90" cy="20" r="5.5" fill="#2dd4a0" opacity="0.7"/>
+  <circle cx="90" cy="20" r="3" fill="#2dd4a0"/>
+
+  <!-- Wordmark: RELAY -->
+  <text x="102" y="24.5" font-family="'Inter', system-ui, sans-serif" font-size="13" font-weight="800" fill="#2dd4a0" letter-spacing="1.5">RELAY</text>
+</svg>
